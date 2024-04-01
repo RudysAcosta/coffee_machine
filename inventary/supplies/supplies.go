@@ -8,7 +8,7 @@ type Supply struct {
 var Supplies = map[string]Supply{
 	"coffee_beans": {Name: "Coffee Beans", Quantity: 1000},
 	"milk":         {Name: "Milk", Quantity: 100},
-	"Water":        {Name: "water", Quantity: 100},
+	"water":        {Name: "Water", Quantity: 100},
 }
 
 // add to supply
