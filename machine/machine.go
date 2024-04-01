@@ -1,11 +1,13 @@
 package machine
 
 import (
+	cashregister "coffee_machine/cash_register"
 	"coffee_machine/inventary"
 	"coffee_machine/inventary/cups"
 	"coffee_machine/inventary/supplies"
 	"coffee_machine/utils"
 	"fmt"
+	"os"
 )
 
 func Init() {
@@ -22,19 +24,19 @@ func selectOptionMainMenu() {
 	switch option {
 	case 1:
 		toInventary()
-		fmt.Println("Check inventary")
 	case 2:
-		fmt.Println("Check cash regiter")
+		toCashRegister()
 	case 3:
 		fmt.Println("Brew coffee")
 	case 4:
-		fmt.Println("Brew coffee")
+		os.Exit(0)
 	default:
 		utils.ClearScreen()
 		fmt.Printf("\nInvalid choice, Please select a valid option.\n")
 		selectOptionMainMenu()
 	}
 
+	Init()
 }
 
 func toInventary() {
@@ -149,4 +151,42 @@ func addSupply(key string) {
 	}
 
 	supplies.Add(key, quantity)
+}
+
+func toCashRegister() {
+	utils.ClearScreen()
+	fmt.Printf("=== Check cash regiter ===\n")
+	fmt.Printf("\n Money: $%d\n\n", cashregister.Cash)
+
+	fmt.Println("1) - Withdraw funds")
+	fmt.Println("2) - Return Main Menu")
+
+	var option int
+	fmt.Scanln(&option)
+
+	switch option {
+	case 1:
+		var quantity int
+
+		// if the user put letter don't break continue to the infiny
+		for {
+			fmt.Printf("\nHow many?: ")
+			_, err := fmt.Scanln(&quantity)
+			if err != nil {
+				fmt.Printf("\nInvalid choice, Please select a valid option.\n")
+			} else if quantity > cashregister.Cash {
+				fmt.Printf("\nWe don't have enough\n")
+			} else {
+				cashregister.Cash -= quantity
+				break
+			}
+		}
+
+	case 2:
+		utils.ClearScreen()
+		Init()
+	default:
+		fmt.Printf("\nInvalid choice, Please select a valid option.\n")
+		toCashRegister()
+	}
 }
