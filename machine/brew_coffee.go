@@ -1,6 +1,7 @@
 package machine
 
 import (
+	cashregister "coffee_machine/cash_register"
 	"coffee_machine/inventary/cups"
 	"coffee_machine/inventary/supplies"
 	"coffee_machine/machine/coffees"
@@ -9,14 +10,14 @@ import (
 	"os"
 )
 
-func startBrewCoffee() {
+func startBrewCoffee() bool {
 	var coffee coffees.Coffee = menu()
 	var cup cups.Cup = sizeMenu(&coffee)
 
 	if cup.Quantity == 0 {
 		fmt.Println("We don't have enough cup")
 		startBrewCoffee()
-		return
+		return false
 	}
 
 	var cosumable map[string]float64 = getCosumable(&coffee, &cup)
@@ -26,14 +27,23 @@ func startBrewCoffee() {
 	if !all_available {
 		fmt.Printf("Insuficiente %s", insufficient_supply)
 		startBrewCoffee()
-		return
+		return false
 	}
 
-	brewCoffee(&coffee, &cup, &cosumable)
+	var is_brewed bool = brewCoffee(&cup, &cosumable)
+	cashregister.Cash += float64(coffee.Coust)
+	if !is_brewed {
+		return false
+	}
+
+	fmt.Printf("Perfection! The coffee (%s) size %s has been brewed flawlessly.", coffee.Name, cup.Type)
+	fmt.Println("Press any key for returne main menu")
+
+	return true
 
 }
 
-func brewCoffee(coffee *coffees.Coffee, cup *cups.Cup, cosumable *map[string]float64) {
+func brewCoffee(cup *cups.Cup, cosumable *map[string]float64) bool {
 
 	index_cup, _ := cups.GetIndex(string(cup.Type))
 
@@ -44,9 +54,19 @@ func brewCoffee(coffee *coffees.Coffee, cup *cups.Cup, cosumable *map[string]flo
 		os.Exit(0)
 	}
 
-	fmt.Println(cups.Cups)
+	for key, value := range *cosumable {
+		if value > 0 {
+			// TODO: Rounding, but it's a bad practice here since decimals are lost.
+			err := supplies.Less(key, int(value))
 
-	// println(string(coffee.Name), cup, *cosumable)
+			if err != nil {
+				fmt.Println(err)
+				os.Exit(0)
+			}
+		}
+	}
+
+	return true
 }
 
 func validator(cosumable *map[string]float64) (string, bool) {

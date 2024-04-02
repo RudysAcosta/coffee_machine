@@ -1,5 +1,7 @@
 package supplies
 
+import "errors"
+
 type Supply struct {
 	Name     string
 	Quantity int
@@ -20,9 +22,18 @@ func Add(supply string, quantity int) {
 }
 
 // Less quantity
-func Less(supply string, quantity int) {
+func Less(supply string, quantity int) error {
+
+	if quantity > Supplies[supply].Quantity {
+		return errors.New("quantity to subtract is greater than current quantity")
+	}
+
 	if s, ok := Supplies[supply]; ok {
 		s.Quantity -= quantity
 		Supplies[supply] = s
+	} else {
+		return errors.New("index out of range")
 	}
+
+	return nil
 }

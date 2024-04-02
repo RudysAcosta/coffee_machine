@@ -28,7 +28,15 @@ func selectOptionMainMenu() {
 		toCashRegister()
 	case 3:
 		// utils.ClearScreen()
-		startBrewCoffee()
+		is_brewed := startBrewCoffee()
+
+		if is_brewed {
+			var input string
+			fmt.Scanln(&input)
+		} else {
+			os.Exit(0)
+		}
+
 	case 4:
 		os.Exit(0)
 	default:
@@ -37,7 +45,7 @@ func selectOptionMainMenu() {
 		selectOptionMainMenu()
 	}
 
-	// Init()``
+	Init()
 }
 
 func toInventary() {
@@ -157,7 +165,7 @@ func addSupply(key string) {
 func toCashRegister() {
 	utils.ClearScreen()
 	fmt.Printf("=== Check cash regiter ===\n")
-	fmt.Printf("\n Money: $%d\n\n", cashregister.Cash)
+	fmt.Printf("\n Money: $%.3f\n\n", cashregister.Cash)
 
 	fmt.Println("1) - Withdraw funds")
 	fmt.Println("2) - Return Main Menu")
@@ -175,10 +183,10 @@ func toCashRegister() {
 			_, err := fmt.Scanln(&quantity)
 			if err != nil {
 				fmt.Printf("\nInvalid choice, Please select a valid option.\n")
-			} else if quantity > cashregister.Cash {
+			} else if float64(quantity) > cashregister.Cash {
 				fmt.Printf("\nWe don't have enough\n")
 			} else {
-				cashregister.Cash -= quantity
+				cashregister.Cash -= float64(quantity)
 				break
 			}
 		}
