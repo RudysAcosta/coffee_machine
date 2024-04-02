@@ -5,12 +5,13 @@ type Coffee struct {
 	Milk   int
 	Water  int
 	Coffee int
+	Coust  float64
 }
 
-var Coffees = map[string]Coffee{
-	"espresso":   {Name: "Espresso", Milk: 0, Water: 30, Coffee: 7},
-	"americano":  {Name: "Americano", Milk: 0, Water: 30, Coffee: 7},
-	"cappuccino": {Name: "Cappuccino", Milk: 0, Water: 30, Coffee: 7},
-	"latte":      {Name: "Latte", Milk: 0, Water: 30, Coffee: 7},
-	"macchiato":  {Name: "Macchiato", Milk: 0, Water: 30, Coffee: 7},
+var Coffees = map[int]Coffee{
+	1: {Name: "Espresso", Milk: 20, Water: 30, Coffee: 7, Coust: 2.3},
+	2: {Name: "Americano", Milk: 30, Water: 30, Coffee: 7, Coust: 3.3},
+	3: {Name: "Cappuccino", Milk: 10, Water: 30, Coffee: 7, Coust: 5.3},
+	4: {Name: "Latte", Milk: 10, Water: 30, Coffee: 7, Coust: 6.3},
+	5: {Name: "Macchiato", Milk: 12, Water: 30, Coffee: 7, Coust: 7.3},
 }

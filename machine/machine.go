@@ -27,7 +27,8 @@ func selectOptionMainMenu() {
 	case 2:
 		toCashRegister()
 	case 3:
-		fmt.Println("Brew coffee")
+		// utils.ClearScreen()
+		startBrewCoffee()
 	case 4:
 		os.Exit(0)
 	default:
@@ -36,7 +37,7 @@ func selectOptionMainMenu() {
 		selectOptionMainMenu()
 	}
 
-	Init()
+	// Init()``
 }
 
 func toInventary() {
