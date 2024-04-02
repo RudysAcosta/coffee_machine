@@ -6,6 +6,7 @@ import (
 	"coffee_machine/machine/coffees"
 	"coffee_machine/utils"
 	"fmt"
+	"os"
 )
 
 func startBrewCoffee() {
@@ -18,17 +19,7 @@ func startBrewCoffee() {
 		return
 	}
 
-	// my_supplies := supplies.Supplies
-
-	// fmt.Println(my_supplies)
-
-	// for _, supply := range my_supplies {
-	// 	fmt.Println(supply)
-	// }
-
 	var cosumable map[string]float64 = getCosumable(&coffee, &cup)
-
-	// cup.Quantity
 
 	insufficient_supply, all_available := validator(&cosumable)
 
@@ -38,22 +29,28 @@ func startBrewCoffee() {
 		return
 	}
 
-	brewCoffee(&coffee, &cup)
+	brewCoffee(&coffee, &cup, &cosumable)
 
 }
 
-func brewCoffee(coffee *coffees.Coffee, cup *cups.Cup) {
-	my_supplies := supplies.Supplies
+func brewCoffee(coffee *coffees.Coffee, cup *cups.Cup, cosumable *map[string]float64) {
 
-	fmt.Println(coffee)
-	fmt.Println(cup)
-	fmt.Println(my_supplies)
+	index_cup, _ := cups.GetIndex(string(cup.Type))
+
+	err := cups.Less(index_cup, 1)
+
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(0)
+	}
+
+	fmt.Println(cups.Cups)
+
+	// println(string(coffee.Name), cup, *cosumable)
 }
 
 func validator(cosumable *map[string]float64) (string, bool) {
 	my_supplies := supplies.Supplies
-
-	fmt.Println((*cosumable)["coffee_beans"])
 
 	for i, supply := range my_supplies {
 		if (*cosumable)[i] > float64(supply.Quantity) {
@@ -70,8 +67,6 @@ func getCosumable(coffee *coffees.Coffee, cup *cups.Cup) map[string]float64 {
 	var milk_to_consume float64 = float64(coffee.Milk) * float64(cup.Multiplier)
 	var water_to_consume float64 = float64(coffee.Water) * float64(cup.Multiplier)
 	var coffee_to_consume float64 = float64(coffee.Coffee) * float64(cup.Multiplier)
-
-	fmt.Println(milk_to_consume, water_to_consume, coffee_to_consume)
 
 	cosumable["milk"] = milk_to_consume
 	cosumable["water"] = water_to_consume
